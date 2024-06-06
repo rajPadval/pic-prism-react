@@ -1,4 +1,3 @@
-import React from "react";
 import SellerHeader from "./SellerHeader";
 
 const Orders = () => {
@@ -36,7 +35,7 @@ const Orders = () => {
       <SellerHeader />
       <h1 className="text-2xl font-semibold mb-5 ml-8">Orders</h1>
       <div className="overflow-x-auto sm:ml-8">
-        <table className="min-w-full bg-white rounded-lg shadow-md">
+        <table className="w-full sm:w-[80vw] bg-white rounded-lg shadow-md">
           <thead>
             <tr className="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">ID</th>
