@@ -17,6 +17,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "buyer",
   },
+  uploads: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+  purchased: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
 const User = mongoose.model("user", userSchema);

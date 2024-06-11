@@ -69,4 +69,27 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+const refresh = async (req, res) => {
+  const { token } = req.body;
+  if (!token)
+    return res.status(401).json({ success: false, message: "Please Login" });
+  try {
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err)
+        return res.status(403).json({ success: false, message: "Forbiden " });
+
+      const accessToken = generateAccessToken(user);
+      return res.status(200).json({
+        success: true,
+        message: "Token refreshed successfully",
+        accessToken,
+      });
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { signup, login, refresh };
