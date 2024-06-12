@@ -50,6 +50,7 @@ const login = async (req, res) => {
     const data = {
       id: user._id,
       accountType: user.accountType,
+      author: user.username,
     };
 
     const accessToken = generateAccessToken(data);
@@ -61,6 +62,7 @@ const login = async (req, res) => {
       accessToken,
       refreshToken,
       role: user.accountType,
+      author: user.username,
     });
   } catch (error) {
     return res
@@ -70,25 +72,36 @@ const login = async (req, res) => {
 };
 
 const refresh = async (req, res) => {
-  const { token } = req.body;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token)
     return res.status(401).json({ success: false, message: "Please Login" });
   try {
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
       if (err)
-        return res.status(403).json({ success: false, message: "Forbiden " });
+        return res.status(403).json({ success: false, message: err.message });
 
-      const accessToken = generateAccessToken(user);
+      const accessToken = generateAccessToken({
+        id: user.id,
+        accountType: user.accountType,
+        author: user.author,
+      });
+      const refreshToken = generateRefreshToken({
+        id: user.id,
+        accountType: user.accountType,
+        author: user.author,
+      });
       return res.status(200).json({
         success: true,
         message: "Token refreshed successfully",
         accessToken,
+        refreshToken,
+        role: user.accountType,
+        author: user.author,
       });
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 

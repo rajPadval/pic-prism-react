@@ -9,6 +9,6 @@ const router = require("express").Router();
 
 router.post("/post/create", verifyToken, createPost);
 router.delete("/post/delete/:id", verifyToken, deletePost);
-router.get("/post/getAll", verifyToken, getAllPosts);
+router.get("/post/getAll", getAllPosts);
 
 module.exports = router;

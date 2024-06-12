@@ -10,7 +10,7 @@ const createPost = async (req, res) => {
       .status(403)
       .json({ success: false, message: "Forbidden, only sellers can post" });
   }
-  const { title, author, price, image } = req.body;
+  const { title, author, price, image, publicId } = req.body;
   try {
     const post = new Post({
       title,
@@ -18,6 +18,7 @@ const createPost = async (req, res) => {
       price,
       image,
       authorId,
+      publicId,
     });
     await post.save();
 
@@ -31,7 +32,7 @@ const createPost = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+      .json({ success: false, message: error.message });
   }
 };
 

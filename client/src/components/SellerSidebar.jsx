@@ -40,7 +40,7 @@ const SellerSidebar = () => {
             <SiGoogleanalytics /> Analytics
           </li>
           <li
-           onClick={() => dispatch(logout())}
+           onClick={() => dispatch(setTab("orders"))}
             className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "orders" && "bg-black text-white"
               }`}
           >
