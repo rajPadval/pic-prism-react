@@ -1,8 +1,8 @@
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
-import ImageCard from "./ImageCard";
+import ImageCard from "../ImageCard"
 import ImageAdd from "./ImageAdd";
-import SellerHeader from "./SellerHeader";
+import DashboardHeader from "../DashboardHeader";
 
 const data = [
   {
@@ -52,7 +52,7 @@ const PhotoManagement = () => {
   return (
     <div className="flex flex-col sm:flex-row">
       <div>
-        <SellerHeader />
+        <DashboardHeader />
         <ImageAdd />
       </div>
 

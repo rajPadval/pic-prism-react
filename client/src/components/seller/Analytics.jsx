@@ -1,5 +1,6 @@
-import ExpenseCard from "./ExpenseCard";
-import SellerHeader from "./SellerHeader";
+import ExpenseCard from "../ExpenseCard";
+import DashboardHeader from "../DashboardHeader";
+import { useLocation } from "react-router-dom"
 
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
 
@@ -69,11 +70,14 @@ const data = [
   },
 ];
 const Analytics = () => {
+
+  const { pathname } = useLocation()
+
   return (
     <div className="">
-      <SellerHeader />
+      <DashboardHeader />
       <h1 className="text-2xl font-semibold mb-5 ml-8">Analytics</h1>
-      <h1 className="text-2xl font-semibold my-5 ml-8">Uploaded This Month</h1>
+      <h1 className="text-2xl font-semibold my-5 ml-8">{pathname === "/seller/profile" ? "Uploaded" : "Purchased"} This Month</h1>
       <div className="w-[83vw] sm:w-[80vw]  ml-8 p-2 bg-white rounded-2xl shadow-md flex flex-col justify-between items-center gap-5">
         <ResponsiveContainer width="100%" height={150}>
           <LineChart data={data}>
@@ -87,13 +91,13 @@ const Analytics = () => {
           </LineChart>
         </ResponsiveContainer>
 
-        <p>No. of posts uploaded : {25}</p>
+        <p>No. of posts {pathname === "/seller/dashboard" ? "uploaded" : "purchased"} : {25}</p>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between gap-2 mb-10">
-        <ExpenseCard data={data} title={"Earned This Week"} value={700} />
-        <ExpenseCard data={data} title={"Earned This Month"} value={4000} />
-        <ExpenseCard data={data} title={"Earned This Year"} value={50000} />
+        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={700} />
+        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={4000} />
+        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={50000} />
       </div>
     </div>
   );

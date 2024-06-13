@@ -1,4 +1,4 @@
-import SellerHeader from "./SellerHeader";
+import DashboardHeader from "./DashboardHeader";
 
 const Orders = () => {
   // Sample order data
@@ -32,7 +32,7 @@ const Orders = () => {
 
   return (
     <div className="">
-      <SellerHeader />
+      <DashboardHeader />
       <h1 className="text-2xl font-semibold mb-5 ml-8">Orders</h1>
       <div className="overflow-x-auto sm:ml-8">
         <table className="w-full sm:w-[80vw] bg-white rounded-lg shadow-md">

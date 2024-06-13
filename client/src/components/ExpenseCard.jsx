@@ -1,6 +1,11 @@
+import { useLocation } from "react-router-dom";
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const ExpenseCard = ({ data, title, value }) => {
+
+  const { pathname } = useLocation()
+
+
   return (
     <div>
       <h1 className="text-2xl font-semibold my-5 ml-8">{title}</h1>
@@ -10,7 +15,7 @@ const ExpenseCard = ({ data, title, value }) => {
             data={data}
             margin={{
               top: 20,
-              bottom:-50,
+              bottom: -50,
             }}
           >
             <Tooltip />
@@ -22,7 +27,7 @@ const ExpenseCard = ({ data, title, value }) => {
             />
           </LineChart>
         </ResponsiveContainer>
-        <p>Total Earned : ₹{value}</p>
+        <p>Total {pathname === "/seller/profile" ? "Earned" : "Spent"} : ₹{value}</p>
       </div>
     </div>
   );

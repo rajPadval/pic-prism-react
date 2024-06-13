@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Orders from "../components/Orders";
-import PhotoManagement from "../components/PhotoManagement";
-import SellerSidebar from "../components/SellerSidebar";
-import Analytics from "../components/Analytics";
+import PhotoManagement from "../components/seller/PhotoManagement";
+import DashboardSidebar from "../components/DashboardSidebar";
+import Analytics from "../components/seller/Analytics";
 import { useSelector } from "react-redux";
 
 const SellerDashboard = () => {
@@ -35,11 +35,10 @@ const SellerDashboard = () => {
 
   return (
     <div className="flex flex-col sm:flex-row">
-      <SellerSidebar />
+      <DashboardSidebar />
       <div
-        className={`transition-opacity duration-500 ${
-          isBooting ? "opacity-0" : "opacity-100"
-        }`}
+        className={`transition-opacity duration-500 ${isBooting ? "opacity-0" : "opacity-100"
+          }`}
       >
         {renderComponent()}
       </div>

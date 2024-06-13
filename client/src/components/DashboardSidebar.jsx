@@ -4,13 +4,16 @@ import { FaList } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { setTab } from "../../store/slices/navSlice";
-import {logout} from "../../store/slices/authSlice"
+import { logout } from "../../store/slices/authSlice"
+import { useLocation } from "react-router-dom";
 
-const SellerSidebar = () => {
+const DashboardSidebar = () => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation()
 
   const sidebar = useSelector((state) => state.nav.sidebar);
   const tab = useSelector((state) => state.nav.tab);
+  const author = useSelector((state) => state.auth.author)
 
   return (
     <nav
@@ -21,16 +24,27 @@ const SellerSidebar = () => {
     >
       <div>
         <div className="bg-black my-5 w-fit rounded-full py-4 px-6 text-white">
-          R
+          {author.charAt(0).toUpperCase()}
         </div>
         <div className="flex flex-col gap-2">
-          <li
-            onClick={() => dispatch(setTab("photos-management"))}
-            className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "photos-management" && "bg-black text-white"
-              }`}
-          >
-            <IoMdPhotos /> Photos Management
-          </li>
+          {pathname === "/seller/profile" ?
+            <li
+              onClick={() => dispatch(setTab("photos-management"))}
+              className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "photos-management" && "bg-black text-white"
+                }`}
+            >
+              <IoMdPhotos /> Photos Management
+            </li> : <li
+              onClick={() => dispatch(setTab("photos-purchased"))}
+              className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "photos-purchased" && "bg-black text-white"
+                }`}
+            >
+              <IoMdPhotos /> Photos Purchased
+            </li>
+
+          }
+
+
 
           <li
             onClick={() => dispatch(setTab("analytics"))}
@@ -40,7 +54,7 @@ const SellerSidebar = () => {
             <SiGoogleanalytics /> Analytics
           </li>
           <li
-           onClick={() => dispatch(setTab("orders"))}
+            onClick={() => dispatch(setTab("orders"))}
             className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "orders" && "bg-black text-white"
               }`}
           >
@@ -56,4 +70,4 @@ const SellerSidebar = () => {
   );
 };
 
-export default SellerSidebar;
+export default DashboardSidebar;
