@@ -73,7 +73,7 @@ const ImageAdd = () => {
           alt="this picture"
           className="w-[350px] h-[25vh] sm:h-[30vh] rounded-lg object-cover"
         />
-        {progress > 0 && <ProgressBar completed={progress} bgColor="black" isLabelVisible={true} />
+        {progress > 0 && <ProgressBar completed={progress} bgColor="black" isLabelVisible={true} transitionTimingFunction="ease-in-out"/>
         }
         <div className="flex flex-col ">
           <label htmlFor="image" className="font-bold">

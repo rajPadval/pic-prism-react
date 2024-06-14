@@ -3,6 +3,9 @@ import DashboardHeader from "../DashboardHeader";
 import { useLocation } from "react-router-dom"
 
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
+import { useEffect, useState } from "react";
+import axios from "axios"
+axios.defaults.withCredentials = true;
 
 const data = [
   {
@@ -71,7 +74,40 @@ const data = [
 ];
 const Analytics = () => {
 
+  const [tillNow, setTillNow] = useState([])
+  const [thisYear, setThisYear] = useState([])
+  const [thisMonth, setThisMonth] = useState([])
+  const [thisWeek, setThisWeek] = useState([])
+
+
   const { pathname } = useLocation()
+
+  const getPostsByDateRange = async () => {
+    const res = await axios.get(import.meta.env.VITE_API_URL + "/post/getPostsByDateRange", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken")
+      },
+      withCredentials: true,
+    });
+    const { data } = await res.data;
+    setTillNow(data.tillNow)
+    setThisYear(data.thisYear)
+    setThisMonth(data.thisMonth)
+    setThisWeek(data.thisWeek)
+  }
+
+  useEffect(() => {
+    getPostsByDateRange()
+  }, [])
+
+  const calculateTotal = (data) => {
+
+    const value = data.reduce((acc, curr) => acc + curr.price, 0);
+    return value;
+  }
+
+
+
 
   return (
     <div className="">
@@ -94,11 +130,14 @@ const Analytics = () => {
         <p>No. of posts {pathname === "/seller/dashboard" ? "uploaded" : "purchased"} : {25}</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-2 mb-10">
-        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={700} />
-        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={4000} />
-        <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={50000} />
-      </div>
+      {
+        !thisMonth?.length ? <h1 className="text-2xl font-semibold my-5 ml-8">No data available </h1> : <div className="flex flex-col sm:flex-row justify-between gap-2 mb-10">``
+          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={calculateTotal(thisWeek)} />
+          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Year`} value={calculateTotal(thisYear)} />
+          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} Till Now`} value={calculateTotal(tillNow)} />
+        </div>
+      }
+
     </div>
   );
 };

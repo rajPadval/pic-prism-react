@@ -4,7 +4,7 @@ const navSlice = createSlice({
   name: "nav",
   initialState: {
     sidebar: false,
-    tab: "analytics",
+    tab: "",
   },
   reducers: {
     toggleSidebar: (state) => {

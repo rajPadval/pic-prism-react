@@ -3,10 +3,14 @@ import Orders from "../components/Orders";
 import PhotoManagement from "../components/seller/PhotoManagement";
 import DashboardSidebar from "../components/DashboardSidebar";
 import Analytics from "../components/seller/Analytics";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setTab } from "../../store/slices/navSlice";
 
 const SellerDashboard = () => {
   const tab = useSelector((state) => state.nav.tab);
+  const dispatch = useDispatch()
+  if (tab === "") dispatch(setTab("photos-management"))
+
   const [isBooting, setIsBooting] = useState(false);
   const [currentTab, setCurrentTab] = useState(tab);
 

@@ -3,6 +3,11 @@ import { MdDelete } from "react-icons/md";
 import ImageCard from "../ImageCard"
 import ImageAdd from "./ImageAdd";
 import DashboardHeader from "../DashboardHeader";
+import { useSelector, useDispatch } from "react-redux"
+import axios from "axios"
+import toast from "react-hot-toast";
+import { setAnalytics, setMyPosts } from "../../../store/slices/postsSlice";
+import { useEffect } from "react";
 
 const data = [
   {
@@ -49,6 +54,34 @@ const data = [
   },
 ];
 const PhotoManagement = () => {
+
+  const posts = useSelector((state) => state.posts.myPosts)
+  const dispatch = useDispatch()
+
+  const getMyPosts = async () => {
+    try {
+      if (posts.length > 0) return
+      const res = await axios.get(import.meta.env.VITE_API_URL + "/post/myPosts", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken")
+        }
+      })
+      const { data } = await res.data;
+      dispatch(setMyPosts(data))
+
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
+  useEffect(() => {
+    getMyPosts()
+  }, [])
+
+
+
+
+
   return (
     <div className="flex flex-col sm:flex-row">
       <div>
@@ -57,14 +90,15 @@ const PhotoManagement = () => {
       </div>
 
       {/* SECTION WHERE ALL THE IMAGES ARE DISPLAYED */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 my-5 bg-transparent sm:bg-white  p-5 w-[90vw] sm:w-[55vw] rounded-lg mx-auto sm:mx-0">
-        {data.map(({ id, title, img, price }) => {
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5 bg-transparent sm:bg-white  p-5 w-[90vw] sm:w-[55vw] sm:h-[95vh]  sm:overflow-y-scroll rounded-lg mx-auto sm:mx-0">
+        {posts?.map(({ _id, title, image, author, price }) => {
           return (
             <ImageCard
-              key={id}
-              id={id}
+              key={_id}
+              id={_id}
               title={title}
-              img={img}
+              img={image}
+              author={author}
               price={price}
               icon1={
                 <BiSolidMessageSquareEdit

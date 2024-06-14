@@ -1,6 +1,10 @@
 import { FaCartShopping } from "react-icons/fa6";
 import { IoIosHeart } from "react-icons/io";
 import ImageCard from "./ImageCard";
+import axios from "axios"
+import { useDispatch, useSelector } from "react-redux";
+import { setAllPosts } from "../../store/slices/postsSlice";
+import { useEffect } from "react";
 
 const data = [
   {
@@ -48,18 +52,33 @@ const data = [
 ];
 
 const PhotoGallery = () => {
+
+  const dispatch = useDispatch()
+
+  const getAllImages = async () => {
+    const res = await axios.get(import.meta.env.VITE_API_URL + "/post/getAll")
+    const { data } = await res.data;
+    dispatch(setAllPosts(data))
+  }
+
+  useEffect(() => { getAllImages() }, [])
+
+  const posts = useSelector((state) => state.posts.allPosts)
+
+
   return (
     <div className="my-20 bg-white flex flex-col justify-center items-center ">
       <h3 className="text-3xl font-semibold my-14">Photos</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-20">
-        {data.map(({ id, title, img, price }) => {
+        {posts?.map(({ _id, title, image, price ,author }) => {
           return (
             <ImageCard
-              key={id}
-              id={id}
+              key={_id}
+              id={_id}
               title={title}
-              img={img}
+              img={image}
               price={price}
+              author={author}
               icon1={
                 <FaCartShopping
                   title="Cart"
