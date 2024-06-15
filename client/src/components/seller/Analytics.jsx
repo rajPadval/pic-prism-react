@@ -2,7 +2,7 @@ import ExpenseCard from "../ExpenseCard";
 import DashboardHeader from "../DashboardHeader";
 import { useLocation } from "react-router-dom"
 
-import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useEffect, useState } from "react";
 import axios from "axios"
 axios.defaults.withCredentials = true;
@@ -94,6 +94,7 @@ const Analytics = () => {
     setThisYear(data.thisYear)
     setThisMonth(data.thisMonth)
     setThisWeek(data.thisWeek)
+    console.log(tillNow)
   }
 
   useEffect(() => {
@@ -113,28 +114,37 @@ const Analytics = () => {
     <div className="">
       <DashboardHeader />
       <h1 className="text-2xl font-semibold mb-5 ml-8">Analytics</h1>
-      <h1 className="text-2xl font-semibold my-5 ml-8">{pathname === "/seller/profile" ? "Uploaded" : "Purchased"} This Month</h1>
+      <h1 className="text-2xl font-semibold my-5 ml-8">{pathname === "/seller/profile" ? "Uploaded" : "Purchased"} This Year</h1>
       <div className="w-[83vw] sm:w-[80vw]  ml-8 p-2 bg-white rounded-2xl shadow-md flex flex-col justify-between items-center gap-5">
         <ResponsiveContainer width="100%" height={150}>
-          <LineChart data={data}>
+          <LineChart
+            data={thisYear}
+            margin={{
+              top: 20,
+              bottom: -50,
+              left: -61,
+            }}
+          >
+            <XAxis dataKey="title" hide />
+            <YAxis />
             <Tooltip />
             <Line
               type="monotone"
-              dataKey="uploaded"
+              dataKey="price"
               stroke="#8884d8"
               strokeWidth={2}
             />
           </LineChart>
         </ResponsiveContainer>
 
-        <p>No. of posts {pathname === "/seller/dashboard" ? "uploaded" : "purchased"} : {25}</p>
+        <p>Total {pathname === "/seller/dashboard" ? "Earned" : "Spent"} : ${calculateTotal(thisYear)}</p>
       </div>
 
       {
         !thisMonth?.length ? <h1 className="text-2xl font-semibold my-5 ml-8">No data available </h1> : <div className="flex flex-col sm:flex-row justify-between gap-2 mb-10">``
-          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={calculateTotal(thisWeek)} />
-          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Year`} value={calculateTotal(thisYear)} />
-          <ExpenseCard data={data} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} Till Now`} value={calculateTotal(tillNow)} />
+          <ExpenseCard data={thisWeek} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={calculateTotal(thisWeek)} dataKey="price" />
+          <ExpenseCard data={thisMonth} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Month`} value={calculateTotal(thisMonth)} dataKey="price" />
+          <ExpenseCard data={tillNow} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} Till Now`} value={calculateTotal(tillNow)} dataKey="price" />
         </div>
       }
 

@@ -5,6 +5,7 @@ const ImageCard = ({ id, img, title, price, author = localStorage.getItem("autho
         <img
           src={img}
           className="w-full h-full hover:scale-105 transition-all ease-linear duration-300 transform cursor-pointer"
+          loading="lazy"
         />
       </div>
       <p className="font-semibold text-white  text-end mt-3 bg-black w-fit px-5 py-1 rounded-full text-sm">

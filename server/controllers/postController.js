@@ -30,9 +30,7 @@ const createPost = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Post created successfully", post });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -64,7 +62,7 @@ const getAllPosts = async (req, res) => {
     const posts = await Post.find();
     if (posts.length === 0)
       return res.status(200).json({ success: true, message: "No posts found" });
-    return res.status(200).json({ success: true, posts });
+    return res.status(200).json({ success: true, data: posts });
   } catch (error) {
     return res
       .status(500)
@@ -72,4 +70,54 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, getAllPosts };
+const getMyPosts = async (req, res) => {
+  try {
+    const authorId = req.id;
+    const { uploads } = await User.findById(authorId).populate("uploads");
+    if (!uploads)
+      return res.status(200).json({ success: true, message: "No posts found" });
+    return res.status(200).json({ success: true, data: uploads });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getPostsByDateRange = async (req, res) => {
+  try {
+    const authorId = req.id;
+    const { uploads } = await User.findById(authorId).populate("uploads");
+
+    if (!uploads) {
+      return res.status(200).json({ success: true, message: "No posts found" });
+    }
+
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+
+    const postsThisYear = uploads.filter(
+      (post) => new Date(post.createdAt) >= startOfYear
+    );
+    const postsThisMonth = uploads.filter(
+      (post) => new Date(post.createdAt) >= startOfMonth
+    );
+    const postsThisWeek = uploads.filter(
+      (post) => new Date(post.createdAt) >= startOfWeek
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        tillNow: uploads,
+        thisYear: postsThisYear,
+        thisMonth: postsThisMonth,
+        thisWeek: postsThisWeek,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { createPost, deletePost, getAllPosts, getMyPosts,getPostsByDateRange };
