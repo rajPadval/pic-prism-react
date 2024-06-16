@@ -2,10 +2,11 @@ import { IoMdPhotos } from "react-icons/io";
 import { SiGoogleanalytics } from "react-icons/si";
 import { FaList } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
+import { AiFillHome } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setTab } from "../../store/slices/navSlice";
 import { logout } from "../../store/slices/authSlice"
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const DashboardSidebar = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,10 @@ const DashboardSidebar = () => {
           >
             <FaList /> Orders
           </li>
+
+          <Link to="/" className="w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2">
+            <AiFillHome /> Home
+          </Link>
         </div>
       </div>
 

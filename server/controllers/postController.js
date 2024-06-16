@@ -120,4 +120,25 @@ const getPostsByDateRange = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, getAllPosts, getMyPosts,getPostsByDateRange };
+const searchPosts = async (req, res) => {
+  const { search } = req.query;
+  try {
+    const posts = await Post.find({
+      title: { $regex: search, $options: "i" },
+    });
+    if (posts.length === 0)
+      return res.status(200).json({ success: true, message: "No posts found" });
+    return res.status(200).json({ success: true, data: posts });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = {
+  createPost,
+  deletePost,
+  getAllPosts,
+  getMyPosts,
+  getPostsByDateRange,
+  searchPosts,
+};

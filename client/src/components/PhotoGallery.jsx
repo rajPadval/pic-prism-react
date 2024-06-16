@@ -25,8 +25,6 @@ const PhotoGallery = () => {
 
   useEffect(() => { getAllImages() }, [])
 
-
-
   const purchaseImage = async (id) => {
     if (!isAuthenticated) {
       toast.error("Please login to purchase asset")
@@ -39,7 +37,6 @@ const PhotoGallery = () => {
       toast.error("Please login to add asset to favourites")
     }
   }
-
 
   return (
     <div className="my-20 bg-white flex flex-col justify-center items-center ">

@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getMyPosts,
   getPostsByDateRange,
+  searchPosts,
 } = require("../controllers/postController");
 const { verifyToken } = require("../middlewares/verifyToken");
 
@@ -14,6 +15,6 @@ router.delete("/post/delete/:id", verifyToken, deletePost);
 router.get("/post/getAll", getAllPosts);
 router.get("/post/myPosts", verifyToken, getMyPosts);
 router.get("/post/getPostsByDateRange", verifyToken, getPostsByDateRange);
-
+router.get("/posts/search", searchPosts);
 
 module.exports = router;

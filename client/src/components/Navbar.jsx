@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import axios from "axios"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { login, logout } from "../../store/slices/authSlice"
 import { useEffect } from "react";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch()
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const role = useSelector((state) => state.auth.role)
 
   const refreshToken = async () => {
     try {
@@ -52,12 +55,18 @@ const Navbar = () => {
         <Link to={"/"} className="hover:text-black cursor-pointer sm:p-2">
           Contact
         </Link>
-        <Link to={"/login"} className="hover:text-black cursor-pointer sm:p-2">
-          Log In
-        </Link>
-        <Link to={"/signup"} className="hover:text-black cursor-pointer sm:p-2">
-          Sign Up
-        </Link>
+        {
+          !isAuthenticated ? <>
+            <Link to={"/login"} className="hover:text-black cursor-pointer sm:p-2">
+              Log In
+            </Link>
+            <Link to={"/signup"} className="hover:text-black cursor-pointer sm:p-2">
+              Sign Up
+            </Link></> : <Link to={`/${role}/profile`} className="hover:text-black cursor-pointer sm:p-2">
+            Profile
+          </Link>
+        }
+
       </ul>
     </div>
   );
