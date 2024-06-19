@@ -18,4 +18,5 @@ router.get("/post/myPosts", verifyToken, getMyPosts);
 router.get("/post/getPostsByDateRange", verifyToken, getPostsByDateRange);
 router.get("/posts/search", searchPosts);
 
+
 module.exports = router;

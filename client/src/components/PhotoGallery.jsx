@@ -27,7 +27,7 @@ const PhotoGallery = () => {
 
   useEffect(() => { getAllImages() }, [])
 
-  const purchaseImage = async (price, id) => {
+  const purchaseImage = async (price, id, postUrl, author, title) => {
     if (!isAuthenticated) {
       toast.error("Please login to purchase asset")
       navigate("/login")
@@ -41,13 +41,13 @@ const PhotoGallery = () => {
       });
       const { data } = await res.data;
       console.log(data)
-      handlePaymentVerify(data, id)
+      handlePaymentVerify(data, id, postUrl, author, title,price)
     } catch (error) {
       toast.error(error.response.data.message)
     }
   }
 
-  const handlePaymentVerify = async (data, id) => {
+  const handlePaymentVerify = async (data, id, postUrl, author, title,price) => {
 
     const options = {
       key: import.meta.env.RAZORPAY_KEY_ID,
@@ -63,7 +63,9 @@ const PhotoGallery = () => {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
-            postId: id
+            postId: id,
+            postUrl
+            , author, title, price
           }, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -109,7 +111,7 @@ const PhotoGallery = () => {
                 <FaCartShopping
                   title="Cart"
                   className="text-2xl text-black cursor-pointer hover:scale-110 transition-all ease-linear duration-300"
-                  onClick={() => purchaseImage(price, _id)}
+                  onClick={() => purchaseImage(price, _id, image, author, title)}
                 />
               }
               icon2={

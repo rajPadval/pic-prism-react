@@ -69,10 +69,10 @@ const PhotosPurchased = () => {
       {/* LISTING ALL THE PHOTOS PURHCAED HERE */}
       <div className="mx-8 grid md:grid-cols-3 lg:grid-cols-4 gap-4">
         {
-          posts?.map(({ _id, title, image, author, price }) => <ImageCard key={_id} title={title} img={image} price={price} author={author} icon2={<IoArrowDownCircle
+          posts?.map(({ _id, title, postUrl, author, price }) => <ImageCard key={_id} title={title} img={postUrl} price={price} author={author} icon2={<IoArrowDownCircle
             title="Favourite"
             className="text-2xl text-red-500 cursor-pointer hover:scale-110 transition-all ease-linear duration-300"
-            onClick={() => downloadImage(image, title)}
+            onClick={() => downloadImage(postUrl, title)}
           />} />)
         }
       </div>

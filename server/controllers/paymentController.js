@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Order = require("../models/Order");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
@@ -38,8 +39,16 @@ const generateOrder = async (req, res) => {
 
 const verifyOrder = async (req, res) => {
   const purchaserId = req.id;
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, postId } =
-    req.body;
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    postId,
+    postUrl,
+    author,
+    price,
+    title,
+  } = req.body;
 
   try {
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -51,13 +60,24 @@ const verifyOrder = async (req, res) => {
     const isAuthentic = expectedSign === razorpay_signature;
     console.log(isAuthentic);
     if (isAuthentic) {
+      const order = new Order({
+        purchaserId,
+        postUrl,
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+        razorpaySignature: razorpay_signature,
+        author,
+        title,
+        price,
+      });
+      await order.save();
       let userData = await User.findByIdAndUpdate(purchaserId, {
-        $push: { purchased: postId },
+        $push: { purchased: order._id },
       });
       let postData = await Post.findByIdAndUpdate(postId, {
         $push: { purchasedBy: purchaserId },
       });
-      console.log(userData, postData)
+      console.log(userData, postData);
       return res
         .status(200)
         .json({ success: true, message: "Payment successful" });

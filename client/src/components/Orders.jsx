@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import DashboardHeader from "./DashboardHeader";
+import axios from "axios"
+import { useDispatch, useSelector } from "react-redux";
+import { setOrders } from "../../store/slices/orderSlice";
 
 const Orders = () => {
   // Sample order data
-  const orders = [
+  const oldOrders = [
     {
       id: 1,
       item: "The Grass",
@@ -30,6 +34,28 @@ const Orders = () => {
     // Add more orders as needed
   ];
 
+  const orders = useSelector((state) => state.order.orders)
+  const role = useSelector((state) => state.auth.role)
+  const dispatch = useDispatch()
+
+
+  const getOrders = async () => {
+    const res = await axios.get(import.meta.env.VITE_API_URL + "/orders/get", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      },
+    });
+    const { data } = await res.data;
+    dispatch(setOrders(data))
+    console.log(data)
+  }
+
+  useEffect(() => {
+    getOrders()
+  }, [])
+
+  const convertDate = date => date.split("T")[0]
+
   return (
     <div className="">
       <DashboardHeader />
@@ -40,25 +66,24 @@ const Orders = () => {
             <tr className="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">ID</th>
               <th className="py-3 px-6 text-left">Item</th>
-              <th className="py-3 px-6 text-left">Purchaser Name</th>
-              <th className="py-3 px-6 text-left">Email</th>
+              <th className="py-3 px-6 text-left">{role === "seller" ? "Purchaser" : "author"} Name</th>
+
               <th className="py-3 px-6 text-left">Date</th>
               <th className="py-3 px-6 text-right">Price</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
-            {orders.map((order) => (
+            {orders?.map((order) => (
               <tr
-                key={order.id}
+                key={order.razorpayOrderId}
                 className="border-b border-gray-200 hover:bg-gray-100"
               >
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {order.id}
+                  {order.razorpayOrderId}
                 </td>
-                <td className="py-3 px-6 text-left">{order.item}</td>
-                <td className="py-3 px-6 text-left">{order.name}</td>
-                <td className="py-3 px-6 text-left">{order.email}</td>
-                <td className="py-3 px-6 text-left">{order.date}</td>
+                <td className="py-3 px-6 text-left">{order.title}</td>
+                <td className="py-3 px-6 text-left">{order.author.charAt(0).toUpperCase() + order.author.slice(1)}</td>
+                <td className="py-3 px-6 text-left">{convertDate(order.createdAt)}</td>
                 <td className="py-3 px-6 text-right">${order.price}</td>
               </tr>
             ))}

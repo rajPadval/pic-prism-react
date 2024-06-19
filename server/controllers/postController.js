@@ -76,6 +76,7 @@ const getMyPosts = async (req, res) => {
   try {
     if (authorAccountType === "buyer") {
       const { purchased } = await User.findById(authorId).populate("purchased");
+      console.log(purchased);
       if (!purchased)
         return res
           .status(200)
@@ -126,7 +127,6 @@ const getPostsByDateRange = async (req, res) => {
       (post) => new Date(post.createdAt) >= startOfWeek
     );
 
-
     return res.status(200).json({
       success: true,
       data: {
@@ -155,6 +155,8 @@ const searchPosts = async (req, res) => {
   }
 };
 
+const addToFavourites = async (req, res) => {};
+
 module.exports = {
   createPost,
   deletePost,
@@ -162,5 +164,5 @@ module.exports = {
   getMyPosts,
   getPostsByDateRange,
   searchPosts,
-  // purchasePost,
+  addToFavourites,
 };
