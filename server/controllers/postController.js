@@ -71,23 +71,43 @@ const getAllPosts = async (req, res) => {
 };
 
 const getMyPosts = async (req, res) => {
+  const authorId = req.id;
+  const authorAccountType = req.accountType;
   try {
-    const authorId = req.id;
-    const { uploads } = await User.findById(authorId).populate("uploads");
-    if (!uploads)
-      return res.status(200).json({ success: true, message: "No posts found" });
-    return res.status(200).json({ success: true, data: uploads });
+    if (authorAccountType === "buyer") {
+      const { purchased } = await User.findById(authorId).populate("purchased");
+      if (!purchased)
+        return res
+          .status(200)
+          .json({ success: true, message: "No posts found" });
+      return res.status(200).json({ success: true, data: purchased });
+    } else {
+      const { uploads } = await User.findById(authorId).populate("uploads");
+      if (!uploads)
+        return res
+          .status(200)
+          .json({ success: true, message: "No posts found" });
+      return res.status(200).json({ success: true, data: uploads });
+    }
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 const getPostsByDateRange = async (req, res) => {
+  const authorId = req.id;
+  const authorAccountType = req.accountType;
+  let data;
   try {
-    const authorId = req.id;
-    const { uploads } = await User.findById(authorId).populate("uploads");
+    if (authorAccountType === "buyer") {
+      const { purchased } = await User.findById(authorId).populate("purchased");
+      data = purchased;
+    } else {
+      const { uploads } = await User.findById(authorId).populate("uploads");
+      data = uploads;
+    }
 
-    if (!uploads) {
+    if (!data) {
       return res.status(200).json({ success: true, message: "No posts found" });
     }
 
@@ -96,20 +116,21 @@ const getPostsByDateRange = async (req, res) => {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
 
-    const postsThisYear = uploads.filter(
+    const postsThisYear = data.filter(
       (post) => new Date(post.createdAt) >= startOfYear
     );
-    const postsThisMonth = uploads.filter(
+    const postsThisMonth = data.filter(
       (post) => new Date(post.createdAt) >= startOfMonth
     );
-    const postsThisWeek = uploads.filter(
+    const postsThisWeek = data.filter(
       (post) => new Date(post.createdAt) >= startOfWeek
     );
+
 
     return res.status(200).json({
       success: true,
       data: {
-        tillNow: uploads,
+        tillNow: data,
         thisYear: postsThisYear,
         thisMonth: postsThisMonth,
         thisWeek: postsThisWeek,
@@ -141,4 +162,5 @@ module.exports = {
   getMyPosts,
   getPostsByDateRange,
   searchPosts,
+  // purchasePost,
 };

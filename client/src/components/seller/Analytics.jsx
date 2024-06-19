@@ -90,6 +90,7 @@ const Analytics = () => {
       withCredentials: true,
     });
     const { data } = await res.data;
+    console.log(data)
     setTillNow(data.tillNow)
     setThisYear(data.thisYear)
     setThisMonth(data.thisMonth)

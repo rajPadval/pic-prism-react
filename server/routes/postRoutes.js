@@ -5,6 +5,7 @@ const {
   getMyPosts,
   getPostsByDateRange,
   searchPosts,
+  purchasePost,
 } = require("../controllers/postController");
 const { verifyToken } = require("../middlewares/verifyToken");
 

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
 
+
 const PhotoGallery = () => {
 
   const dispatch = useDispatch()
@@ -15,6 +16,7 @@ const PhotoGallery = () => {
 
   const posts = useSelector((state) => state.posts.allPosts)
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+
 
   const getAllImages = async () => {
     if (posts.length > 0) return;
@@ -25,17 +27,69 @@ const PhotoGallery = () => {
 
   useEffect(() => { getAllImages() }, [])
 
-  const purchaseImage = async (id) => {
+  const purchaseImage = async (price, id) => {
     if (!isAuthenticated) {
       toast.error("Please login to purchase asset")
       navigate("/login")
     }
+    try {
+      const res = await axios.post(import.meta.env.VITE_API_URL + "/payment/generate", { price }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        },
+        withCredentials: true
+      });
+      const { data } = await res.data;
+      console.log(data)
+      handlePaymentVerify(data, id)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
+  const handlePaymentVerify = async (data, id) => {
+
+    const options = {
+      key: import.meta.env.RAZORPAY_KEY_ID,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Raj Padval",
+      description: "Test Mode",
+      order_id: data.id,
+      handler: async (response) => {
+        console.log(response)
+        try {
+          const res = await axios.post(import.meta.env.VITE_API_URL + `/payment/verify`, {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            postId: id
+          }, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            },
+            withCredentials: true
+          })
+
+          const data = await res.data;
+          toast.success(data.message)
+
+        } catch (error) {
+          toast.error(error.response.data.message)
+        }
+      },
+      theme: {
+        color: "#5f63b8"
+      }
+    }
+
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
   }
 
   const addToFavourites = async (id) => {
-    if (!isAuthenticated) {
-      toast.error("Please login to add asset to favourites")
-    }
+    if (!isAuthenticated) return toast.error("Please login to add asset to favourites")
+
   }
 
   return (
@@ -55,7 +109,7 @@ const PhotoGallery = () => {
                 <FaCartShopping
                   title="Cart"
                   className="text-2xl text-black cursor-pointer hover:scale-110 transition-all ease-linear duration-300"
-                  onClick={() => purchaseImage(_id)}
+                  onClick={() => purchaseImage(price, _id)}
                 />
               }
               icon2={
@@ -69,6 +123,7 @@ const PhotoGallery = () => {
           );
         })}
       </div>
+
     </div>
   );
 };
