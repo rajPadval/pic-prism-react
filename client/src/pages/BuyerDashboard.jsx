@@ -6,6 +6,7 @@ import Analytics from "../components/seller/Analytics";
 import { useDispatch, useSelector } from "react-redux";
 import PhotosPurchased from "../components/buyer/PhotosPurchased";
 import { setTab } from "../../store/slices/navSlice";
+import Favourites from "../components/Favourites";
 
 const BuyerDashboard = () => {
   const tab = useSelector((state) => state.nav.tab);
@@ -33,6 +34,8 @@ const BuyerDashboard = () => {
         return <Orders />;
       case "analytics":
         return <Analytics />;
+      case "favourites":
+        return <Favourites />
       default:
         return <PhotoManagement />;
     }

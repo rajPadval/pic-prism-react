@@ -155,7 +155,57 @@ const searchPosts = async (req, res) => {
   }
 };
 
-const addToFavourites = async (req, res) => {};
+const addToFavourites = async (req, res) => {
+  const authorId = req.id;
+  const { postId } = req.params;
+  try {
+    const user = await User.findByIdAndUpdate(authorId, {
+      $push: { favourites: postId },
+    });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Post added to favourites" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const removeFromFavourites = async (req, res) => {
+  const authorId = req.id;
+  const { postId } = req.params;
+  try {
+    const user = await User.findByIdAndUpdate(authorId, {
+      $pull: { favourites: postId },
+    });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Post added to favourites" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getFavourites = async (req, res) => {
+  const authorId = req.id;
+  try {
+    const { favourites } = await User.findById(authorId).populate("favourites");
+    if (!favourites)
+      return res
+        .status(200)
+        .json({ success: true, message: "No favourites found" });
+    return res.status(200).json({ success: true, data: favourites });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 module.exports = {
   createPost,
@@ -165,4 +215,6 @@ module.exports = {
   getPostsByDateRange,
   searchPosts,
   addToFavourites,
+  removeFromFavourites,
+  getFavourites,
 };

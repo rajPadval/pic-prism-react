@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema({
       ref: "Order",
     },
   ],
+  favourites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
 const User = mongoose.model("user", userSchema);

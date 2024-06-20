@@ -1,4 +1,4 @@
-import { IoMdPhotos } from "react-icons/io";
+import { IoMdPhotos, IoIosHeart } from "react-icons/io";
 import { SiGoogleanalytics } from "react-icons/si";
 import { FaList } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
@@ -60,6 +60,13 @@ const DashboardSidebar = () => {
               }`}
           >
             <FaList /> Orders
+          </li>
+          <li
+            onClick={() => dispatch(setTab("favourites"))}
+            className={`w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2 ${tab === "orders" && "bg-black text-white"
+              }`}
+          >
+            <IoIosHeart /> Favourites
           </li>
 
           <Link to="/" className="w-full rounded-lg px-2 hover:bg-black hover:text-white cursor-pointer transition-all ease-linear duration-300 hover:scale-105 flex justify-start items-center gap-2">

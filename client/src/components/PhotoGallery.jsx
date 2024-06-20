@@ -41,13 +41,13 @@ const PhotoGallery = () => {
       });
       const { data } = await res.data;
       console.log(data)
-      handlePaymentVerify(data, id, postUrl, author, title,price)
+      handlePaymentVerify(data, id, postUrl, author, title, price)
     } catch (error) {
       toast.error(error.response.data.message)
     }
   }
 
-  const handlePaymentVerify = async (data, id, postUrl, author, title,price) => {
+  const handlePaymentVerify = async (data, id, postUrl, author, title, price) => {
 
     const options = {
       key: import.meta.env.RAZORPAY_KEY_ID,
@@ -91,7 +91,18 @@ const PhotoGallery = () => {
 
   const addToFavourites = async (id) => {
     if (!isAuthenticated) return toast.error("Please login to add asset to favourites")
-
+    try {
+      const res = await axios.put(import.meta.env.VITE_API_URL + `/posts/addToFavourites/${id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        },
+        withCredentials: true
+      })
+      const { message } = await res.data;
+      toast.success(message)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   }
 
   return (

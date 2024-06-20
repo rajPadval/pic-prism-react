@@ -5,7 +5,9 @@ const {
   getMyPosts,
   getPostsByDateRange,
   searchPosts,
-  purchasePost,
+  addToFavourites,
+  removeFromFavourites,
+  getFavourites,
 } = require("../controllers/postController");
 const { verifyToken } = require("../middlewares/verifyToken");
 
@@ -17,6 +19,12 @@ router.get("/post/getAll", getAllPosts);
 router.get("/post/myPosts", verifyToken, getMyPosts);
 router.get("/post/getPostsByDateRange", verifyToken, getPostsByDateRange);
 router.get("/posts/search", searchPosts);
-
+router.put("/posts/addToFavourites/:postId", verifyToken, addToFavourites);
+router.put(
+  "/posts/removeFromFavourites/:postId",
+  verifyToken,
+  removeFromFavourites
+);
+router.get("/posts/favourites", verifyToken, getFavourites);
 
 module.exports = router;

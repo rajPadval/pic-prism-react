@@ -102,11 +102,22 @@ const Analytics = () => {
     getPostsByDateRange()
   }, [])
 
-  const calculateTotal = (data) => {
+  const calculateTotalForSeller = (data) => {
+    // Reduce the data array to accumulate the total value
+    const value = data.reduce((acc, curr) => {
+      // Ensure that price and purchasedBy are valid
+      const price = curr.price || 0;
+      const purchases = curr.purchasedBy ? curr.purchasedBy.length : 0;
 
-    const value = data.reduce((acc, curr) => acc + curr.price, 0);
+      // Calculate the total for the current item and add to accumulator
+      return acc + (price * purchases);
+    }, 0);
+
+    console.log(value);
     return value;
   }
+
+  const calculateTotalForBuyer = (data) => data.reduce((acc, curr) => acc + curr.price, 0);
 
 
 
@@ -138,14 +149,14 @@ const Analytics = () => {
           </LineChart>
         </ResponsiveContainer>
 
-        <p>Total {pathname === "/seller/dashboard" ? "Earned" : "Spent"} : ${calculateTotal(thisYear)}</p>
+        <p>Total {pathname === "/seller/dashboard" ? "Earned" : "Spent"} : ${pathname === "/seller/profile" ? calculateTotalForSeller(thisYear) : calculateTotalForBuyer(thisYear)}</p>
       </div>
 
       {
         !thisMonth?.length ? <h1 className="text-2xl font-semibold my-5 ml-8">No data available </h1> : <div className="flex flex-col sm:flex-row justify-between gap-2 mb-10">``
-          <ExpenseCard data={thisWeek} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={calculateTotal(thisWeek)} dataKey="price" />
-          <ExpenseCard data={thisMonth} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Month`} value={calculateTotal(thisMonth)} dataKey="price" />
-          <ExpenseCard data={tillNow} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} Till Now`} value={calculateTotal(tillNow)} dataKey="price" />
+          <ExpenseCard data={thisWeek} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Week`} value={pathname === "/seller/profile" ? calculateTotalForSeller(thisWeek) : calculateTotalForBuyer(thisWeek)} dataKey="price" />
+          <ExpenseCard data={thisMonth} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} This Month`} value={pathname === "/seller/profile" ? calculateTotalForSeller(thisMonth) : calculateTotalForBuyer(thisMonth)} dataKey="price" />
+          <ExpenseCard data={tillNow} title={`${pathname === "/seller/profile" ? "Earned" : "Spent"} Till Now`} value={pathname === "/seller/profile" ? calculateTotalForSeller(tillNow) : calculateTotalForBuyer(tillNow)} dataKey="price" />
         </div>
       }
 
