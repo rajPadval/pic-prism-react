@@ -45,10 +45,13 @@ const Navbar = () => {
         : "fixed"
         }  top-0 left-0 right-0 bg-white shadow-md gap-1 sm:gap-0 z-30`}
     >
-      <Link to={"/"} className="font-bold text-3xl">
-        PicPrism
-      </Link>
-      <ul className="flex gap-5 text-lg font-semibold text-gray-400">
+      <div className="flex justify-between items-center">
+        <img src="/picprismlogo.png" alt="" className="w-[50px] " />
+        <Link to={"/"} className="font-bold text-3xl">
+          PicPrism
+        </Link>
+      </div>
+      <ul className="flex gap-5 text-lg font-semibold text-gray-400 ml-5 sm:ml-0">
         <Link to={"/"} className="hover:text-black cursor-pointer sm:p-2">
           About
         </Link>

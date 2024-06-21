@@ -2,6 +2,8 @@ import { IoIosSearch } from "react-icons/io";
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { setAllPosts } from "../../store/slices/postsSlice"
+
+
 const HeroSection = () => {
 
   const dispatch = useDispatch()
